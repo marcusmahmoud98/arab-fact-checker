@@ -1,0 +1,16 @@
+fact-checker/
+├── scraper/
+│   ├── __init__.py       ← فاضي عادي ✅
+│   ├── fb_scraper.py     ← جديد ✅
+│   └── pages.json        ← فيه الصفحة ✅
+├── analyzer/
+│   ├── __init__.py       ← فاضي عادي ✅
+│   └── perplexity_client.py ← جديد ✅
+├── publisher/
+│   ├── __init__.py       ← فاضي عادي ✅
+│   └── blog_publisher.py ← جديد ✅
+├── data/                 ← seen_posts.json هيتعمل هنا أوتو
+├── main.py               ← محدّث ✅
+├── config.py
+├── requirements.txt
+└── .env
