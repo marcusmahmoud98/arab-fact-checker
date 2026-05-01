@@ -3,8 +3,8 @@ import time
 from scraper.fb_scraper import scrape_new_posts, mark_post_as_seen
 from analyzer.perplexity_client import analyze_post
 from publisher.blog_publisher import publish_post
+from publisher.payload_contract import normalize_publish_payload
 from config import SCHEDULE_HOURS
-
 
 def run_pipeline():
     print("=" * 50)
@@ -26,20 +26,19 @@ def run_pipeline():
         try:
             # تحليل البوست
             analysis_result = analyze_post(post["text"])
-            title = analysis_result.get("claim_title", "غير معروف")
-            analysis_text = analysis_result.get("analysis", "")
+            publish_payload, used_date_fallback = normalize_publish_payload(analysis_result, post)
+            if used_date_fallback:
+                print(
+                    "Invalid or missing publish_date from analyzer; "
+                    f"using fallback {publish_payload['publish_date']} for post {post.get('url')}"
+                )
 
-            print(f"Title: {title}")
-            print(f"Analysis preview: {analysis_text[:100]}...")
+            print(f"Title: {publish_payload['title']}")
+            print(f"Analysis preview: {publish_payload['analysis'][:100]}...")
 
             # 3. نشر على البلوج
             print(f"\n[3/3] Publishing...")
-            publish_post(
-                title=title,
-                content=analysis_text,
-                original_post_url=post["url"],
-                original_text=post["text"]
-            )
+            publish_post(publish_payload)
             mark_post_as_seen(post["url"])
             print("Post published and marked as seen.")
 
