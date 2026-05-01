@@ -15,7 +15,7 @@ export default async function Home() {
     const posts = await getAllPosts();
     const displayPosts = posts.filter((post) => post.verdict !== "صحيح");
     const covers = await Promise.all(
-      displayPosts.map((post) => getCoverForTitle(post.title, post.sqlid)),
+      displayPosts.map((post) => getCoverForTitle(post.title, post.sqlid, post.source)),
     );
     items = displayPosts.map((post, index) => ({ post, cover: covers[index] }));
   } catch {

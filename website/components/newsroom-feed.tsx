@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import { PostCard } from "@/components/post-card";
 import { VERDICT_META } from "@/lib/verdict";
 import type { Post } from "@/lib/types";
+import { getDisplaySource } from "@/lib/source-label";
 
 type PostWithCover = {
   post: Post;
@@ -35,7 +37,11 @@ export function NewsroomFeed({ items, hasError }: NewsroomFeedProps) {
   const stats = useMemo(() => {
     const reviewed = items.length;
     const inReview = items.filter(({ post }) => post.verdict === "غير مؤكد").length;
-    const monitoredSources = new Set(items.map(({ post }) => post.source.trim()).filter(Boolean)).size;
+    const monitoredSources = new Set(
+      items
+        .map(({ post }) => getDisplaySource(post.source, post.original_post_url).trim())
+        .filter(Boolean),
+    ).size;
     return { reviewed, inReview, monitoredSources };
   }, [items]);
 
@@ -147,12 +153,34 @@ export function NewsroomFeed({ items, hasError }: NewsroomFeedProps) {
 
         {selectedPost && (
           <div className="mx-auto max-w-[980px] pb-6 text-right">
+            <div className="relative mb-3 aspect-[5/4] w-full overflow-hidden rounded-[12px] border border-[#1a1a28] bg-[#11111f]">
+              {selectedPost.cover.imageUrl ? (
+                <Image
+                  src={selectedPost.cover.imageUrl}
+                  alt={selectedPost.post.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 900px"
+                />
+              ) : (
+                <div
+                  className="h-full w-full"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, #121220 0%, #0b0b14 100%)",
+                  }}
+                />
+              )}
+              <div className="absolute inset-0 bg-black/25" />
+            </div>
             <span className={`inline-flex rounded-full px-2 py-1 text-xs ${VERDICT_META[selectedPost.post.verdict].badgeClassName}`}>
               {selectedPost.post.verdict}
             </span>
             <h2 className="mt-3 text-lg font-semibold leading-7 text-white lg:text-[30px] lg:leading-[1.3]">{selectedPost.post.title}</h2>
             <p className="mt-2 text-sm lg:text-lg">
-              <span className="text-[#e53e3e]">{selectedPost.post.source}</span>
+              <span className="text-[#e53e3e]">
+                {getDisplaySource(selectedPost.post.source, selectedPost.post.original_post_url)}
+              </span>
               <span className="px-1 text-[rgba(255,255,255,0.58)]">·</span>
               <span className="text-[rgba(255,255,255,0.58)]">
                 {new Date(selectedPost.post.publish_date).toLocaleDateString("ar-EG")}

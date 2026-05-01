@@ -25,21 +25,24 @@ const STOP_WORDS = new Set([
   "بوست",
 ]);
 
-function extractKeyword(title: string): string {
-  const words = title
+function extractKeywords(title: string, source?: string): string {
+  const sourceWords = (source ?? "")
     .replace(/[^\p{L}\p{N}\s]/gu, " ")
     .split(/\s+/)
     .map((word) => word.trim())
     .filter((word) => word.length > 2 && !STOP_WORDS.has(word.toLowerCase()));
 
-  if (words.length === 0) return "news";
+  const titleWords = title
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .split(/\s+/)
+    .map((word) => word.trim())
+    .filter((word) => word.length > 2 && !STOP_WORDS.has(word.toLowerCase()));
 
-  const uniqueWords = [...new Set(words)];
-  const selectedWords = uniqueWords
-    .sort((a, b) => b.length - a.length)
-    .slice(0, 3);
+  const mergedWords = [...sourceWords, ...titleWords];
+  if (mergedWords.length === 0) return "news";
 
-  return selectedWords.join(" ");
+  const uniqueWords = [...new Set(mergedWords)];
+  return uniqueWords.slice(0, 3).join(" ");
 }
 
 export type PostCover = {
@@ -47,13 +50,17 @@ export type PostCover = {
   gradient: string;
 };
 
-export async function getCoverForTitle(title: string, seed = 0): Promise<PostCover> {
+export async function getCoverForTitle(
+  title: string,
+  seed = 0,
+  source?: string,
+): Promise<PostCover> {
   const accessKey = process.env.UNSPLASH_ACCESS_KEY;
   if (!accessKey) {
     return { imageUrl: null, gradient: DEFAULT_GRADIENT };
   }
 
-  const keyword = extractKeyword(title);
+  const keyword = extractKeywords(title, source);
   const url = new URL("https://api.unsplash.com/search/photos");
   url.searchParams.set("query", keyword);
   url.searchParams.set("per_page", "10");
