@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import Image from "next/image";
 import type { Post } from "@/lib/types";
 import { VERDICT_META } from "@/lib/verdict";
@@ -11,73 +8,53 @@ type PostCardProps = {
     imageUrl: string | null;
     gradient: string;
   };
+  onOpen: (post: Post) => void;
 };
 
-export function PostCard({ post, cover }: PostCardProps) {
-  const [expanded, setExpanded] = useState(false);
+export function PostCard({ post, cover, onOpen }: PostCardProps) {
   const verdictMeta = VERDICT_META[post.verdict];
 
   return (
-    <article
-      className="group overflow-hidden rounded-2xl border border-zinc-800 bg-card transition duration-300 hover:-translate-y-1 hover:border-red-600/60 hover:bg-card-hover hover:shadow-[0_18px_35px_-22px_rgba(220,38,38,0.8)]"
-      onClick={() => setExpanded((prev) => !prev)}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          setExpanded((prev) => !prev);
-        }
-      }}
-      aria-expanded={expanded}
+    <button
+      type="button"
+      className="group w-full rounded-[14px] border border-[#1a1a28] bg-[#0e0e1a] p-[14px] text-right transition duration-150 ease-[ease] hover:-translate-y-[2px] hover:border-[#e53e3e66]"
+      onClick={() => onOpen(post)}
     >
-      <div className="relative h-52 w-full">
+      <div className="relative mb-3 h-[72px] w-full overflow-hidden rounded-[10px]">
         {cover.imageUrl ? (
-          <Image
-            src={cover.imageUrl}
-            alt={post.title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 50vw"
+          <Image src={cover.imageUrl} alt={post.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+        ) : (
+          <div
+            className="h-full w-full"
+            style={{
+              background:
+                "linear-gradient(180deg, #121220 0%, #0b0b14 100%)",
+            }}
           />
-        ) : (
-          <div className="h-full w-full" style={{ background: cover.gradient }} />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/65 to-transparent" />
-      </div>
-
-      <div className="space-y-4 p-5">
+        <div className="absolute inset-0 bg-black/30" />
         <span
-          className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm ring-1 ${verdictMeta.badgeClassName}`}
+          className={`absolute right-2 top-2 inline-flex rounded-full px-2 py-1 text-xs font-normal lg:px-3 lg:py-1.5 lg:text-sm ${verdictMeta.badgeClassName}`}
         >
-          <span>{verdictMeta.emoji}</span>
-          <span>{post.verdict}</span>
+          {post.verdict}
         </span>
-
-        <h2 className="text-lg font-bold leading-8 text-zinc-50">{post.title}</h2>
-
-        <p className="text-sm text-zinc-400">
-          {post.source} - {new Date(post.publish_date).toLocaleDateString("ar-EG")}
-        </p>
-
-        {expanded ? (
-          <div className="space-y-3 rounded-xl border border-zinc-700/80 bg-zinc-950/60 p-4 text-sm leading-7 text-zinc-200">
-            <p>{post.analysis}</p>
-            <p className="text-zinc-400">{post.original_text}</p>
-            <a
-              href={post.original_post_url}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-block text-red-400 transition hover:text-red-300"
-              onClick={(event) => event.stopPropagation()}
-            >
-              عرض المنشور الأصلي
-            </a>
-          </div>
-        ) : (
-          <p className="text-sm text-zinc-500">اضغط على الكارت لعرض التحليل الكامل.</p>
-        )}
       </div>
-    </article>
+
+      <h2 className="mb-2 text-[17px] font-semibold leading-7 text-white lg:text-[23px] lg:leading-9">{post.title}</h2>
+
+      <p className="mb-3 text-sm lg:text-lg">
+        <span className="text-[#e53e3e]">{post.source}</span>
+        <span className="px-1 text-[rgba(255,255,255,0.58)]">·</span>
+        <span className="text-[rgba(255,255,255,0.58)]">
+          {new Date(post.publish_date).toLocaleDateString("ar-EG")}
+        </span>
+      </p>
+
+      <p className="mb-4 line-clamp-2 text-sm leading-6 text-[rgba(255,255,255,0.7)] lg:text-lg lg:leading-8">{post.analysis}</p>
+
+      <span className="text-sm text-[rgba(255,255,255,0.7)] transition-colors duration-150 group-hover:text-[#e53e3e] lg:text-lg">
+        اقرأ المراجعة
+      </span>
+    </button>
   );
 }

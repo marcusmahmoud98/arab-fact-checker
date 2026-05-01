@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS posts (
   source TEXT NOT NULL,
   publish_date DATE NOT NULL,
   verdict TEXT NOT NULL CHECK (
-    verdict IN ('كاذب بالكامل', 'مضلل', 'لم يحدث', 'غير حقيقي')
+    verdict IN ('كاذب بالكامل', 'مضلل', 'لم يحدث', 'غير حقيقي', 'صحيح', 'غير مؤكد')
   ),
   analysis TEXT NOT NULL,
   original_post_url TEXT NOT NULL,

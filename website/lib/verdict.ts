@@ -1,25 +1,26 @@
 import type { Verdict } from "@/lib/types";
 
 type VerdictMeta = {
-  emoji: string;
   badgeClassName: string;
 };
 
 export const VERDICT_META: Record<Verdict, VerdictMeta> = {
   "كاذب بالكامل": {
-    emoji: "🔴",
-    badgeClassName: "bg-red-500/15 text-red-300 ring-red-500/40",
+    badgeClassName: "bg-[#7f1d1d] text-[#fca5a5]",
   },
   مضلل: {
-    emoji: "🟠",
-    badgeClassName: "bg-orange-500/15 text-orange-300 ring-orange-500/40",
+    badgeClassName: "bg-[#78350f] text-[#fcd34d]",
   },
   "لم يحدث": {
-    emoji: "⚫",
-    badgeClassName: "bg-zinc-500/20 text-zinc-200 ring-zinc-500/40",
+    badgeClassName: "bg-[#1e1b4b] text-[#a5b4fc]",
   },
   "غير حقيقي": {
-    emoji: "🟣",
-    badgeClassName: "bg-purple-500/15 text-purple-300 ring-purple-500/40",
+    badgeClassName: "bg-[#3b0764] text-[#e879f9]",
+  },
+  صحيح: {
+    badgeClassName: "bg-[#1f2937] text-[#d1d5db]",
+  },
+  "غير مؤكد": {
+    badgeClassName: "bg-[#1f2937] text-[#d1d5db]",
   },
 };

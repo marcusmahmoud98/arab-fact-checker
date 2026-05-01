@@ -46,5 +46,10 @@ export async function insertPost(payload: NewPostPayload): Promise<Post> {
       created_at;
   `;
 
-  return rows[0];
+  const createdPost = rows[0];
+  if (!createdPost) {
+    throw new Error("Insert operation completed without returning a row.");
+  }
+
+  return createdPost;
 }
