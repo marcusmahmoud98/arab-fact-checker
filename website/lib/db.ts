@@ -9,6 +9,7 @@ export async function getAllPosts(): Promise<Post[]> {
     SELECT
       sqlid,
       title,
+      claim_summary,
       source,
       publish_date,
       verdict,
@@ -25,9 +26,10 @@ export async function getAllPosts(): Promise<Post[]> {
 
 export async function insertPost(payload: NewPostPayload): Promise<Post> {
   const rows = (await sql`
-    INSERT INTO posts (title, source, publish_date, verdict, analysis, original_post_url, original_text)
+    INSERT INTO posts (title, claim_summary, source, publish_date, verdict, analysis, original_post_url, original_text)
     VALUES (
       ${payload.title},
+      ${payload.claim_summary},
       ${payload.source},
       ${payload.publish_date},
       ${payload.verdict as Verdict},
@@ -38,6 +40,7 @@ export async function insertPost(payload: NewPostPayload): Promise<Post> {
     RETURNING
       sqlid,
       title,
+      claim_summary,
       source,
       publish_date,
       verdict,

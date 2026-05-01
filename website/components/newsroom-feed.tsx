@@ -114,7 +114,7 @@ export function NewsroomFeed({ items, hasError }: NewsroomFeedProps) {
           </p>
         </section>
       ) : (
-        <section className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {filteredItems.map((item) => (
             <PostCard key={item.post.sqlid} post={item.post} cover={item.cover} onOpen={() => setSelectedPost(item)} />
           ))}
@@ -154,24 +154,14 @@ export function NewsroomFeed({ items, hasError }: NewsroomFeedProps) {
         {selectedPost && (
           <div className="mx-auto max-w-[980px] pb-6 text-right">
             <div className="relative mb-3 aspect-[5/4] w-full overflow-hidden rounded-[12px] border border-[#1a1a28] bg-[#11111f]">
-              {selectedPost.cover.imageUrl ? (
-                <Image
-                  src={selectedPost.cover.imageUrl}
-                  alt={selectedPost.post.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 900px"
-                />
-              ) : (
-                <div
-                  className="h-full w-full"
-                  style={{
-                    background:
-                      "linear-gradient(180deg, #121220 0%, #0b0b14 100%)",
-                  }}
-                />
-              )}
-              <div className="absolute inset-0 bg-black/25" />
+              <Image
+                src={selectedPost.cover.imageUrl ?? "/fake-news.svg"}
+                alt={selectedPost.post.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 900px"
+              />
+              <div className="absolute inset-0 bg-black/10" />
             </div>
             <span className={`inline-flex rounded-full px-2 py-1 text-xs ${VERDICT_META[selectedPost.post.verdict].badgeClassName}`}>
               {selectedPost.post.verdict}
@@ -185,6 +175,11 @@ export function NewsroomFeed({ items, hasError }: NewsroomFeedProps) {
               <span className="text-[rgba(255,255,255,0.58)]">
                 {new Date(selectedPost.post.publish_date).toLocaleDateString("ar-EG")}
               </span>
+            </p>
+
+            <h3 className="mt-5 text-base font-semibold text-white lg:text-xl">ما قاله البوست</h3>
+            <p className="mt-2 whitespace-pre-wrap text-sm leading-7 text-[rgba(255,255,255,0.7)] lg:text-lg lg:leading-8">
+              {selectedPost.post.claim_summary}
             </p>
 
             <h3 className="mt-5 text-base font-semibold text-white lg:text-xl">التحليل</h3>

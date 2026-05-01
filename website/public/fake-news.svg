@@ -1,0 +1,13 @@
+<svg width="1200" height="1200" viewBox="0 0 1200 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="1200" fill="#1A1A28"/>
+  <rect x="80" y="80" width="1040" height="1040" rx="36" fill="#0E0E1A" stroke="#2A2A3A" stroke-width="8"/>
+  <rect x="170" y="180" width="860" height="190" rx="20" fill="#E53E3E"/>
+  <text x="600" y="300" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="110" font-weight="700">FAKE NEWS</text>
+  <rect x="170" y="450" width="860" height="34" rx="17" fill="#343447"/>
+  <rect x="170" y="520" width="760" height="34" rx="17" fill="#343447"/>
+  <rect x="170" y="590" width="810" height="34" rx="17" fill="#343447"/>
+  <rect x="170" y="660" width="700" height="34" rx="17" fill="#343447"/>
+  <circle cx="220" cy="860" r="44" fill="#E53E3E"/>
+  <rect x="290" y="834" width="360" height="24" rx="12" fill="#4A4A63"/>
+  <rect x="290" y="874" width="280" height="24" rx="12" fill="#3C3C51"/>
+</svg>

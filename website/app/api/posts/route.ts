@@ -96,6 +96,7 @@ export async function POST(request: Request) {
 
   const parsed = body as Partial<CreatePostBody>;
   const title = toNonEmptyString(parsed.title);
+  const claimSummary = toNonEmptyString(parsed.claim_summary);
   const source = toNonEmptyString(parsed.source);
   const publishDate = toISODate(parsed.publish_date);
   const verdictInput = toNonEmptyString(parsed.verdict);
@@ -110,6 +111,12 @@ export async function POST(request: Request) {
   }
   if (!source) {
     validationErrors.push({ field: "source", message: "حقل source مطلوب ويجب أن يكون نصًا غير فارغ." });
+  }
+  if (!claimSummary) {
+    validationErrors.push({
+      field: "claim_summary",
+      message: "حقل claim_summary مطلوب ويجب أن يكون نصًا غير فارغ.",
+    });
   }
   if (!publishDate) {
     validationErrors.push({
@@ -166,13 +173,14 @@ export async function POST(request: Request) {
     );
   }
 
-  if (!title || !source || !publishDate || !analysis || !originalPostUrl || !originalText) {
+  if (!title || !claimSummary || !source || !publishDate || !analysis || !originalPostUrl || !originalText) {
     return toError("VALIDATION_ERROR", "فشل التحقق من البيانات المدخلة.", 422);
   }
 
   try {
     const post = await insertPost({
       title,
+      claim_summary: claimSummary,
       source,
       publish_date: publishDate,
       verdict: normalizedVerdict,

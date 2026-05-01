@@ -5,6 +5,7 @@ from config import BLOG_API_URL, BLOG_API_SECRET, REQUEST_TIMEOUT_SECONDS
 def _payload_summary(payload):
     return {
         "title": (payload.get("title") or "")[:60],
+        "claim_summary": (payload.get("claim_summary") or "")[:60],
         "source": payload.get("source"),
         "publish_date": payload.get("publish_date"),
         "verdict": payload.get("verdict"),
@@ -21,6 +22,7 @@ def publish_post(post_payload):
     }
     payload = {
         "title": post_payload.get("title") or "غير معروف",
+        "claim_summary": post_payload.get("claim_summary") or "",
         "source": post_payload.get("source") or "غير معروف",
         "publish_date": post_payload.get("publish_date") or "غير معروف",
         "verdict": post_payload.get("verdict") or "غير مؤكد",

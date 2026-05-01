@@ -60,6 +60,7 @@ def normalize_publish_payload(analysis_result, post):
     publish_date, used_fallback = resolve_publish_date(analysis_result.get("publish_date"))
     return {
         "title": analysis_result.get("claim_title") or "غير معروف",
+        "claim_summary": analysis_result.get("claim_summary") or "",
         "source": analysis_result.get("source") or "غير معروف",
         "publish_date": publish_date,
         "verdict": normalize_verdict(analysis_result.get("verdict")),

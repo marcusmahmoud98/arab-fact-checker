@@ -27,6 +27,7 @@ export function normalizeVerdict(value: string): Verdict | null {
 export type Post = {
   sqlid: number;
   title: string;
+  claim_summary: string;
   source: string;
   publish_date: string;
   verdict: Verdict;
