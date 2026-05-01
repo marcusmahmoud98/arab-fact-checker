@@ -20,7 +20,7 @@ export function PostCard({ post, cover, onOpen }: PostCardProps) {
       className="group w-full rounded-[14px] border border-[#1a1a28] bg-[#0e0e1a] p-[14px] text-right transition duration-150 ease-[ease] hover:-translate-y-[2px] hover:border-[#e53e3e66]"
       onClick={() => onOpen(post)}
     >
-      <div className="relative mb-3 h-[72px] w-full overflow-hidden rounded-[10px]">
+      <div className="relative mb-3 h-[140px] w-full overflow-hidden rounded-[10px]">
         {cover.imageUrl ? (
           <Image src={cover.imageUrl} alt={post.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
         ) : (

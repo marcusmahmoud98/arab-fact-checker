@@ -19,6 +19,10 @@ const STOP_WORDS = new Set([
   "from",
   "that",
   "this",
+  "خبر",
+  "عاجل",
+  "منشور",
+  "بوست",
 ]);
 
 function extractKeyword(title: string): string {
@@ -30,7 +34,12 @@ function extractKeyword(title: string): string {
 
   if (words.length === 0) return "news";
 
-  return words.sort((a, b) => b.length - a.length)[0];
+  const uniqueWords = [...new Set(words)];
+  const selectedWords = uniqueWords
+    .sort((a, b) => b.length - a.length)
+    .slice(0, 3);
+
+  return selectedWords.join(" ");
 }
 
 export type PostCover = {
@@ -38,7 +47,7 @@ export type PostCover = {
   gradient: string;
 };
 
-export async function getCoverForTitle(title: string): Promise<PostCover> {
+export async function getCoverForTitle(title: string, seed = 0): Promise<PostCover> {
   const accessKey = process.env.UNSPLASH_ACCESS_KEY;
   if (!accessKey) {
     return { imageUrl: null, gradient: DEFAULT_GRADIENT };
@@ -47,7 +56,7 @@ export async function getCoverForTitle(title: string): Promise<PostCover> {
   const keyword = extractKeyword(title);
   const url = new URL("https://api.unsplash.com/search/photos");
   url.searchParams.set("query", keyword);
-  url.searchParams.set("per_page", "1");
+  url.searchParams.set("per_page", "10");
   url.searchParams.set("orientation", "landscape");
 
   try {
@@ -66,7 +75,14 @@ export async function getCoverForTitle(title: string): Promise<PostCover> {
       results?: Array<{ urls?: { regular?: string } }>;
     };
 
-    const imageUrl = data.results?.[0]?.urls?.regular ?? null;
+    const results = data.results ?? [];
+    if (results.length === 0) {
+      return { imageUrl: null, gradient: DEFAULT_GRADIENT };
+    }
+
+    const safeSeed = Number.isFinite(seed) ? Math.abs(Math.trunc(seed)) : 0;
+    const selectedIndex = safeSeed % results.length;
+    const imageUrl = results[selectedIndex]?.urls?.regular ?? null;
     return { imageUrl, gradient: DEFAULT_GRADIENT };
   } catch {
     return { imageUrl: null, gradient: DEFAULT_GRADIENT };
