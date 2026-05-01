@@ -1,10 +1,11 @@
-import { sql } from "@vercel/postgres";
+import { neon } from "@neondatabase/serverless";
 import type { Post, Verdict } from "@/lib/types";
 
 type NewPostPayload = Omit<Post, "sqlid" | "created_at">;
+const sql = neon(process.env.DATABASE_URL!);
 
 export async function getAllPosts(): Promise<Post[]> {
-  const { rows } = await sql<Post>`
+  const rows = (await sql`
     SELECT
       sqlid,
       title,
@@ -17,13 +18,13 @@ export async function getAllPosts(): Promise<Post[]> {
       created_at
     FROM posts
     ORDER BY publish_date DESC, created_at DESC;
-  `;
+  `) as Post[];
 
   return rows;
 }
 
 export async function insertPost(payload: NewPostPayload): Promise<Post> {
-  const { rows } = await sql<Post>`
+  const rows = (await sql`
     INSERT INTO posts (title, source, publish_date, verdict, analysis, original_post_url, original_text)
     VALUES (
       ${payload.title},
@@ -44,7 +45,7 @@ export async function insertPost(payload: NewPostPayload): Promise<Post> {
       original_post_url,
       original_text,
       created_at;
-  `;
+  `) as Post[];
 
   const createdPost = rows[0];
   if (!createdPost) {
